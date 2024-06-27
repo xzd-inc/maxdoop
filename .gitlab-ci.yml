@@ -1,0 +1,19 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - /home/gitlab-runner/script/build_web_maxdoop_ui.sh $CI_PROJECT_NAMESPACE $CI_PROJECT_NAME $CI_BUILD_REF_NAME $CI_COMMIT_SHA
+  only:
+    - company
+    - dev
+
+deploy:
+  stage: deploy
+  script:
+    - /home/gitlab-runner/script/maxdoop_deploy.sh $CI_PROJECT_NAMESPACE $CI_PROJECT_NAME $CI_BUILD_REF_NAME $CI_COMMIT_SHA
+  only:
+    - dev
+    - company

@@ -1,0 +1,36 @@
+.topBox {
+  display: flex;
+  width: 100%;
+}
+.leftBox{
+  width: 25%;
+  margin-right: 10px;
+}
+.leftBox-title{
+  display: flex; 
+  justify-content:space-between; 
+  align-items: center
+}
+.leftBox-content{
+  color: #606266;
+}
+.leftBox-content-title{
+  margin-bottom: 15px;
+}
+.leftBox-content-switch{
+  justify-content: space-between; 
+  display: flex
+}
+.rightBox{ 
+  width: 80%;
+}
+.rightBox-ws{
+  height: 900px;
+  overflow-y: scroll;
+}
+.rightBox-content{
+  color: #606266;
+  margin: 10px 0;
+  font-size: 16px;
+
+}
