@@ -6,12 +6,7 @@
       :name="i"
       :key="i"
     >
-      <ActuatorItem
-        v-for="(_, i) in item.executorConditions"
-        :idx="i"
-        v-model="item.executorConditions[i]"
-        :key="i"
-      />
+      <ActuatorItem v-model="item.executorConditions" />
       <!-- <OpenAction />
       <el-button class="add-relation_button" @click="addOffItem">
         + 添加执行关系duo
@@ -57,22 +52,22 @@ const ruleExecutorDtos = reactive([
           }
         ]
       },
-      // {
-      //   "condition_relation": "and", // and:并且  or:或者  （当有前上一个元素时，该元素的condition_relation属性 才需要配置，第一个元素不需要配置）
-      //   "condition_expression": [
-      //     {
-      //       "expression_param": "pre",
-      //       "expression_operator": "<",
-      //       "expression_value": "2",
-      //     },
-      //     {
-      //       "expression_param": "hum",
-      //       "expression_operator": "=",
-      //       "expression_value": "40",
-      //       "expression_relation": "and"
-      //     }
-      //   ]
-      // }
+      {
+        "condition_relation": "and", // and:并且  or:或者  （当有前上一个元素时，该元素的condition_relation属性 才需要配置，第一个元素不需要配置）
+        "condition_expression": [
+          {
+            "expression_param": "pre",
+            "expression_operator": "<",
+            "expression_value": "2",
+          },
+          {
+            "expression_param": "hum",
+            "expression_operator": "=",
+            "expression_value": "40",
+            "expression_relation": "and"
+          }
+        ]
+      }
     ],
     "executorConfigs": {
       "branchActionTrue": [ // 当条件执行为true时执行的分支

@@ -1,33 +1,36 @@
 <template>
   <div>
-    <div class="Select-options">
+    <div
+      v-for="(item, idx) in executorConditions"
+      class="Select-options"
+      :key="idx"
+    >
       <div>
-        <div v-if="idx">
-          当:
-        </div>
+        <div v-if="!idx">当:</div>
 
-        <div v-else style="margin-bottom: 5px">
-          <el-select
-            placeholder="并且"
-            class="Select-option"
-            v-model="executorCondition?.condition_relation"
-          >
+        <div v-else class="else-select">
+          <el-select placeholder="并且" class="Select-option" v-model="item?.condition_relation">
             <el-option
-              v-for="itemGroup in expression_relation"
+              v-for="itemGroup in relationList"
               :key="itemGroup.value"
               :label="itemGroup.label"
               :value="itemGroup.value"
             />
           </el-select>
           <el-icon
-            @click="delGroup(executorCondition, i)"
-            style="color: red; cursor: pointer"
+            @click="delExecutorCondition(idx)"
+            class="del-icon"
           >
             <Delete />
           </el-icon>
         </div>
-        <div>
-          <div v-for="(k, i) in item.condition_expression" :key="i" class="item">
+
+        <!-- <div> -->
+          <div
+            v-for="(k, i) in item.condition_expression"
+            :key="i"
+            class="item"
+          >
             <el-input
               v-model="k.expression_param"
               placeholder="输入参数"
@@ -40,9 +43,9 @@
             >
               <el-option
                 v-for="item in operateOptions"
-                :key="item.value"
                 :label="item.label"
                 :value="item.value"
+                :key="item.value"
               />
             </el-select>
             <el-input
@@ -51,35 +54,33 @@
               class="Select-option"
             />
             <el-select
-              v-model="k.selectRelate"
+              v-model="k.expression_relation"
               placeholder="选择关系"
               class="Select-option"
             >
               <el-option
-                v-for="item in expression_relation"
-                :key="item.value"
+                v-for="item in relationList"
                 :label="item.label"
                 :value="item.value"
+                :key="item.value"
               />
             </el-select>
+
             <el-icon
               v-if="item.condition_expression.length > 1"
               @click="delItem(item.condition_expression, i)"
-              style="color: red; cursor: pointer"
+              class="del-icon"
             >
               <Delete />
             </el-icon>
           </div>
 
           <div style="margin-bottom: 10px">
-            <el-button class="inputAdd" @click="addItem(item.condition_expression)"
-              >+</el-button
-            >
-            <div
-              style="border: 1px dashed #cccccc; width: 87%; margin: 5px 60px"
-            ></div>
+            <el-button class="inputAdd" @click="addItem(item.condition_expression)">+</el-button>
+            <div style="border: 1px dashed #cccccc; width: 87%; margin: 5px 60px"></div>
           </div>
-        </div>
+
+        <!-- </div> -->
       </div>
     </div>
 
@@ -94,21 +95,24 @@ import { defineModel } from 'vue'
 
 const props = defineProps(['idx'])
 
-interface IExecutorCondition {
-  condition_relation: string
-  condition_expression: [
+const a = [{
+  "condition_relation": "and",
+  "condition_expression": [
     {
-      expression_param: string
-      expression_operator: string
-      expression_value: number
-      expression_relation: string
+      "expression_param": "pre",
+      "expression_operator": "<",
+      "expression_value": "2",
+    },
+    {
+      "expression_param": "hum",
+      "expression_operator": "=",
+      "expression_value": "40",
+      "expression_relation": "and"
     }
   ]
-}
+}]
 
-const executorCondition = defineModel<IExecutorCondition>()
-
-const condition_expression = executorCondition.value?.condition_expression
+const executorConditions = defineModel<IExecutorConditions>()
 
 const init = {
   expression_param: 'hum',
@@ -131,8 +135,8 @@ const addGroup = () => {
   })
 }
 
-const delGroup = (v, i) => {
-  item.splice(i, 1)
+const delExecutorCondition = (idx) => {
+  executorConditions.value?.splice(idx, 1)
 }
 
 const addItem = v => {
@@ -147,17 +151,28 @@ const operateOptions = [
   { value: '>', label: '>' },
   { value: '<', label: '<' },
   { value: '=', label: '=' },
-]
+] as const
 
-const expression_relation = [
+const relationList = [
   { value: 'and', label: '并且' },
   { value: 'or  ', label: '或者' },
-]
+] as const
+
+type IExecutorConditions = Array<{ condition_relation: string, condition_expression: ICondition_expression }>
+
+type ICondition_expression = ICondition_expression_item[]
+
+interface ICondition_expression_item {
+  expression_param: string
+  expression_operator: string
+  expression_value: number | string
+  expression_relation: string
+}
+
 </script>
 
 <style scoped>
 .Select-options {
-  /* display: flex; */
   margin: 5px 5px;
   align-items: flex-start;
 }
@@ -175,5 +190,12 @@ const expression_relation = [
 .inputAdd {
   margin: 5px 60px;
   width: 88%;
+}
+.else-select {
+  margin-bottom: 5px;
+}
+.del-icon {
+  color: red;
+  cursor: pointer;
 }
 </style>

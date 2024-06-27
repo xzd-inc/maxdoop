@@ -83,5 +83,6 @@
     "commitizen": {
       "path": "node_modules/cz-git"
     }
-  }
+  },
+  "__npminstall_done": false
 }
