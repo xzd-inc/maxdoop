@@ -5,16 +5,14 @@
       <ActuatorItem v-model="item.executorConditions" />
       <!-- 条件为 true 的执行 -->
       <OpenAction v-model="item.executorConfigs.branchActionTrue" />
-      <!-- <el-button class="add-relation_button" @click="addOffItem">
-        + 添加执行关系duo
-      </el-button>
+
       <el-form-item label="否则">
-        <el-button @click="elseButton">+</el-button>
+        <el-button @click="elseButton(item.executorConfigs.branchActionFalse)">+</el-button>
       </el-form-item>
-      <OpenAction v-if="isShowElseRelation" />
-      <el-button class="add-relation_button" v-if="isShowElseRelation" @click="addOffItem">
-        + 添加执行关系否则
-      </el-button> -->
+      <OpenAction
+        v-if="item.executorConfigs.branchActionFalse?.length"
+        v-model="item.executorConfigs.branchActionFalse"
+      />
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -47,10 +45,10 @@ const ruleExecutorDtos = reactive([
         },
       ],
       branchActionFalse: [ // 当条件执行为false时执行的分支
-        {
-          type: '', // 1.串行 2.并行
-          actions: []
-        },
+        // {
+        //   type: '', // 1.串行 2.并行
+        //   actions: []
+        // },
       ]
     }
   }
@@ -80,13 +78,16 @@ const editRuleExecutorDtos = (idx: number, action: 'remove' | 'add') => {
           },
         ],
         branchActionFalse: [ // 当条件执行为false时执行的分支
-          {
-            type: '', // 1.串行 2.并行
-            actions: []
-          },
+
         ]
       }
     })
+  }
+}
+
+const elseButton = (branchActionTrue: object[]) => {
+  if (!branchActionTrue?.length) {
+    branchActionTrue.push({ type: '', actions: [] })
   }
 }
 
