@@ -151,7 +151,65 @@ const ruleExecutorDtos = reactive([
 ])
 
 const editRuleExecutorDtos = (idx: number, action: 'remove' | 'add') => {
-  console.log(111, idx, action)
+  if (action === 'remove') {
+    ruleExecutorDtos.splice(idx, 1)
+  } else {
+    ruleExecutorDtos.push({// 条件一
+    "executorConditions": [ // 条件表达式
+      {
+        "condition_expression": [
+          {
+            "expression_param": "", // 参数
+            "expression_operator": "", // 操作   有（1.> 2.< 3.= 三种）
+            "expression_value": "", // 参数值
+          },
+        ]
+      },
+    ],
+    "executorConfigs": {
+      "branchActionTrue": [ // 当条件执行为true时执行的分支
+        {
+          "type": "1", // 1.串行 2.并行
+          "actions": [
+            {
+              "executor_content": "deviceOutputNode", // 设备输入
+              "executor_config": {
+                "operator_type": "1", // 1.功能调用  2.属性读取  3.属性设置 选1就好
+                "executor_target": [ // 设备的id集合.如果用户选择了产品，没有选择设备，则自动选择产品下的所有设备
+                  "1791650558225674241"
+                ],
+                "function_id": "1792371474641072130", // 方法的Id
+                "params": { // 调用方法时的入参  /rest/auth/thingsModel/function/no-page/query 的  集合中每个元素的inputData字段中的集合
+                  "setTemperature": "55" // 请求参数  key：参数的唯一标识   value:用户输入的值
+                }
+              }
+            }
+          ]
+        },
+      ],
+      "branchActionFalse": [ // 当条件执行为false时执行的分支
+        {
+          "type": "1", // 1.串行 2.并行
+          "actions": [
+            {
+              "executor_content": "deviceOutputNode", // 设备输入
+              "executor_config": {
+                "operator_type": "1", // 1.功能调用  2.属性读取  3.属性设置 选1就好
+                "executor_target": [ // 设备的id集合.如果用户选择了产品，没有选择设备，则自动选择产品下的所有设备
+                  "1791650558225674241"
+                ],
+                "function_id": "1792371474641072130", // 方法的Id
+                "params": { // 调用方法时的入参  /rest/auth/thingsModel/function/no-page/query 的  集合中每个元素的inputData字段中的集合
+                  "setTemperature": "55" // 请求参数  key：参数的唯一标识   value:用户输入的值
+                }
+              }
+            }
+          ]
+        },
+      ]
+    }
+  })
+  }
 }
 
 </script>

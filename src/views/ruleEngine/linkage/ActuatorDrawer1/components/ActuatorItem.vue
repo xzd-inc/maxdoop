@@ -9,7 +9,7 @@
         <div v-if="!idx">当:</div>
 
         <div v-else class="else-select">
-          <el-select placeholder="并且" class="Select-option" v-model="item?.condition_relation">
+          <el-select v-model="item.condition_relation" placeholder="请选择" class="Select-option">
             <el-option
               v-for="itemGroup in relationList"
               :key="itemGroup.value"
@@ -25,7 +25,6 @@
           </el-icon>
         </div>
 
-        <!-- <div> -->
           <div
             v-for="(k, i) in item.condition_expression"
             :key="i"
@@ -54,6 +53,7 @@
               class="Select-option"
             />
             <el-select
+              :style="{ visibility: i !== 0 ? 'visible' : 'hidden' }"
               v-model="k.expression_relation"
               placeholder="选择关系"
               class="Select-option"
@@ -68,7 +68,7 @@
 
             <el-icon
               v-if="item.condition_expression.length > 1"
-              @click="delItem(item.condition_expression, i)"
+              @click="delCondition_expression(item.condition_expression, i)"
               class="del-icon"
             >
               <Delete />
@@ -76,11 +76,10 @@
           </div>
 
           <div style="margin-bottom: 10px">
-            <el-button class="inputAdd" @click="addItem(item.condition_expression)">+</el-button>
+            <el-button class="inputAdd" @click="addCondition_expression(item.condition_expression)">+</el-button>
             <div style="border: 1px dashed #cccccc; width: 87%; margin: 5px 60px"></div>
           </div>
 
-        <!-- </div> -->
       </div>
     </div>
 
@@ -93,43 +92,17 @@
 <script setup lang="ts">
 import { defineModel } from 'vue'
 
-const props = defineProps(['idx'])
-
-const a = [{
-  "condition_relation": "and",
-  "condition_expression": [
-    {
-      "expression_param": "pre",
-      "expression_operator": "<",
-      "expression_value": "2",
-    },
-    {
-      "expression_param": "hum",
-      "expression_operator": "=",
-      "expression_value": "40",
-      "expression_relation": "and"
-    }
-  ]
-}]
-
 const executorConditions = defineModel<IExecutorConditions>()
 
-const init = {
-  expression_param: 'hum',
-  expression_operator: '=',
-  expression_value: '60',
-  expression_relation: 'or',
-}
-
 const addGroup = () => {
-  executorCondition.value?.push({
+  executorConditions.value?.push({
     condition_relation: '',
     condition_expression: [
       {
         expression_param: '',
         expression_operator: '',
         expression_value: '',
-        selectRelate: '',
+        expression_relation: '',
       },
     ],
   })
@@ -139,12 +112,17 @@ const delExecutorCondition = (idx) => {
   executorConditions.value?.splice(idx, 1)
 }
 
-const addItem = v => {
-  item.push({ ...init })
+const addCondition_expression = condition_expression => {
+  condition_expression.push({
+    expression_param: '',
+    expression_operator: '',
+    expression_value: '',
+    expression_relation: '',
+  })
 }
 
-const delItem = (v, i) => {
-  item.splice(i, 1)
+const delCondition_expression = (condition_expression, i) => {
+  condition_expression.splice(i, 1)
 }
 
 const operateOptions = [
